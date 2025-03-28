@@ -14,6 +14,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout.jsx";
 import EmailList from "../components/EmailList.jsx";
+import { emails } from "../data/emails.js";
 import { ethers } from "ethers";
 
 import { usercontractabi, mailcoreabi, mailcoreaddress } from "../constants.js";
@@ -21,12 +22,12 @@ import { usercontractabi, mailcoreabi, mailcoreaddress } from "../constants.js";
 const MailInbox = () => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
-  const [emails, setEmails] = useState([]);
   const [userContract, setUserContract] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [connectedAddress, setWalletAddress] = useState(null);
   const inboxEmails = emails.filter((email) => email.folder === "inbox");
+
 
   // useEffect(() => {
   //   const connectBlockchain = async () => {
