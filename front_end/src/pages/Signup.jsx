@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Lock, User, Mail as MailIcon } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, User, Mail as MailIcon } from "lucide-react";
 
 const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup attempt:', { name, email, password });
+    if (email === "" || password === "" || confirmPassword === "") {
+      setError("Please fill the fields");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+    setError("");
+    console.log("Signup attempt:", { name, email, password });
+    navigate("/inbox");
   };
 
   return (
@@ -20,10 +36,13 @@ const Signup = () => {
           <div className="w-12 h-12 bg-indigo-600 rounded-full mx-auto flex items-center justify-center">
             <MailIcon className="w-8 h-8 text-white" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">Create an account</h2>
+          <h2 className="mt-6 text-3xl font-bold text-white">
+            Create an account
+          </h2>
           <p className="mt-2 text-sm text-gray-400">
             Join us to experience the best email service
           </p>
+          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -92,6 +111,26 @@ const Signup = () => {
                 />
               </div>
             </div>
+            <div>
+              <label htmlFor="confirm_password" className="sr-only">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="confirm_password"
+                  name="confirm_password"
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="appearance-none relative block w-full px-3 py-2 pl-10 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Confirm Password"
+                />
+              </div>
+            </div>
           </div>
 
           <div>
@@ -104,8 +143,11 @@ const Signup = () => {
           </div>
 
           <p className="text-center text-sm text-gray-400">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-indigo-400 hover:text-indigo-300">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-indigo-400 hover:text-indigo-300"
+            >
               Sign in
             </Link>
           </p>
@@ -113,6 +155,6 @@ const Signup = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;
