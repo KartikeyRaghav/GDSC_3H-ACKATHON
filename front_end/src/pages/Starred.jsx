@@ -1,12 +1,13 @@
-import { emails } from '../data/emails';
-import EmailList from '../components/EmailList';
+import { emails } from "../data/emails";
+import EmailList from "../components/EmailList";
+import Layout from "../components/Layout";
 
 const Starred = () => {
-  const starredEmails = emails.filter(email => email.starred);
-  
+  const starredEmails = emails.filter((email) => email.starred);
+
   return (
     <div className="flex-1 overflow-auto">
-      <EmailList emails={starredEmails} />
+      <Layout component={<EmailList emails={starredEmails} />} />
     </div>
   );
 };

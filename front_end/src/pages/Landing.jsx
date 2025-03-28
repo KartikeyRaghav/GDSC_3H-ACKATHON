@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { ArrowRight, Github, Twitter, Linkedin, Mail, Lock } from "lucide-react";
 import { mailcoreaddress, mailcoreabi } from "../constants.js";
+import { useNavigate, Link } from "react-router-dom";
 
 const Landing = () => {
   const navigate = useNavigate();
