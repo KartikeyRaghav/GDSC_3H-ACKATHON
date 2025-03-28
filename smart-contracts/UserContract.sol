@@ -6,9 +6,11 @@ pragma solidity 0.8.28;
 contract UserContract {
     uint256 private constant MAX_MAIL_SUBJECT_LENGTH = 200;
     address public owner;
+    string public profile_image;
     
-    constructor(address _owner) {
+    constructor(address _owner,string memory _profile_image) {
         owner = _owner;
+        profile_image = _profile_image;
     }
     
     struct Mail {
@@ -18,6 +20,7 @@ contract UserContract {
         address receiver;
         string body;
         string subject;
+        string attachment;
     }
 
     // Storage mappings
@@ -34,7 +37,8 @@ contract UserContract {
         // address[] memory _cc,
         address _receiver,
         string memory _body,
-        string memory _subject
+        string memory _subject,
+        string memory _attachment
     ) public {
         require(msg.sender==owner,"You are not owner of the mail account");
         require(_receiver != address(0), "Invalid receiver address");
@@ -45,7 +49,8 @@ contract UserContract {
             sender: msg.sender,
             receiver: _receiver,
             body: _body,
-            subject: _subject
+            subject: _subject,
+            attachment : _attachment
         });
 
         // Store in both sender's sent and receiver's received

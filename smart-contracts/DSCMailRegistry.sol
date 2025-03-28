@@ -9,6 +9,7 @@ contract DSCMailRegistry {
         string username;
         address userContract;
         bool exists;
+        string profile_image;
     }
     
     // Mapping from user address to their details.
@@ -24,12 +25,14 @@ contract DSCMailRegistry {
     function _addUser(
         address _user, 
         string memory _username, 
-        address _userContract
+        address _userContract,
+        string memory _profile_image
     ) internal {
         users[_user] = UserInfo({
             username: _username,
             userContract: _userContract,
-            exists: true
+            exists: true,
+            profile_image:_profile_image
         });
         emit UserAdded(_user, _username, _userContract);
     }

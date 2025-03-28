@@ -12,14 +12,14 @@ contract DSCMailCore is DSCMailRegistry {
     
     /// @notice Register a new user.
     /// @param _username The chosen username (can be empty).
-    function register(string memory _username) external returns (address)  {
+    function register(string memory _username,string memory _profile_image) external returns (address)  {
         require(!users[msg.sender].exists, "Already registered");
         
         // Deploy a new User Contract for the user.
-        UserContract userContract = new UserContract(msg.sender);
+        UserContract userContract = new UserContract(msg.sender,_profile_image);
         
         // Add the user to the registry.
-        _addUser(msg.sender, _username, address(userContract));
+        _addUser(msg.sender, _username, address(userContract),_profile_image);
 
         return(address(userContract));
         
