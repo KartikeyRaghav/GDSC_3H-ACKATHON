@@ -1,11 +1,95 @@
 import { useState } from "react";
 import { ethers } from "ethers";
-import { ArrowRight, Github, Twitter, Linkedin, Mail, Lock } from "lucide-react";
+import {
+  ArrowRight,
+  Github,
+  Twitter,
+  Linkedin,
+  Mail,
+  Lock,
+} from "lucide-react";
 import { mailcoreaddress, mailcoreabi } from "../constants.js";
 import { useNavigate, Link } from "react-router-dom";
 
 const Landing = () => {
   const navigate = useNavigate();
+
+  const connectBlockchain = async () => {
+    try {
+      // Check if Ethereum provider is available (MetaMask or similar)
+      if (window.ethereum) {
+        // Request account access
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const provider = new ethers.providers.JsonRpcProvider();
+        const signer = provider.getSigner();
+        setProvider(provider);
+        setSigner(signer);
+
+        if (accounts.length === 0) {
+          throw new Error("No accounts found in MetaMask");
+        }
+
+        setWalletAddress(accounts[0]);
+        console.log("Account : ", accounts[0]);
+        // Create MailCore contract instance
+        const mailCoreContract = new ethers.Contract(
+          mailcoreaddress,
+          mailcoreabi,
+          signer
+        );
+
+        if (connectedAddress) {
+          alert("!No connected wallet!!");
+        }
+
+        // Fetch user info to get user contract address
+        const userInfo = await mailCoreContract.users(connectedAddress);
+
+        if (!userInfo.exists) {
+          throw new Error("User not registered");
+        }
+
+        // Create user contract instance
+        const userContractInstance = new ethers.Contract(
+          userInfo.userContract,
+          usercontractabi,
+          signer
+        );
+        setUserContract(userContractInstance);
+
+        // Fetch received emails
+        const receivedMailCount =
+          await userContractInstance.getReceivedMailsCount();
+        const receivedEmails = [];
+
+        for (let i = 0; i < receivedMailCount; i++) {
+          const mail = await userContractInstance.getReceivedMail(i);
+          receivedEmails.push({
+            id: i,
+            from: mail.sender,
+            subject: mail.subject,
+            preview: mail.body.substring(0, 50) + "...",
+            time: new Date(mail.timestamp * 1000).toLocaleTimeString(),
+            starred: false,
+            unread: true,
+          });
+        }
+
+        setEmails(receivedEmails);
+        setLoading(false);
+      } else {
+        throw new Error(
+          "Ethereum provider not found. Please install MetaMask."
+        );
+      }
+    } catch (err) {
+      console.error("Blockchain connection error:", err);
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -31,12 +115,12 @@ const Landing = () => {
                   <span>Get Started</span>
                   <ArrowRight size={20} />
                 </Link>
-                <Link
-                  to="/login"
+                <button
+                  onClick={connectBlockchain}
                   className="flex items-center justify-center space-x-2 px-8 py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <span>Sign In</span>
-                </Link>
+                </button>
               </div>
               <div className="mt-8 flex items-center gap-4 justify-center lg:justify-start text-gray-400">
                 <a href="#" className="hover:text-white transition-colors">

@@ -1,22 +1,13 @@
 export const emails = [
+  // Inbox Emails
   {
     id: 1,
     from: "Alice Johnson",
     subject: "Weekly Team Update",
     preview: "Here's a summary of what we accomplished this week...",
     body: `Hi team,
-  
-  I wanted to share a quick update on our progress this week. We've made significant strides in several key areas:
-  
-  1. Completed the user authentication system
-  2. Launched the new dashboard design
-  3. Fixed 12 critical bugs
-  4. Improved overall performance by 25%
-  
-  Great work everyone! Let's keep this momentum going into next week.
-  
-  Best regards,
-  Alice`,
+
+    I wanted to share a quick update on our progress this week...`,
     time: "10:30 AM",
     starred: true,
     unread: true,
@@ -26,69 +17,121 @@ export const emails = [
     id: 2,
     from: "GitHub",
     subject: "Security Alert: Dependencies",
-    preview:
-      "We found a potential security vulnerability in one of your dependencies...",
-    body: `Security Alert: High Severity
-  
-  We found a potential security vulnerability in one of your dependencies.
-  
-  Repository: your-repo
-  Package: example-package
-  Severity: High
-  Vulnerable versions: < 2.0.0
-  Patched version: 2.0.0
-  
-  We recommend upgrading this package as soon as possible.
-  
-  GitHub Security`,
+    preview: "We found a potential security vulnerability...",
+    body: `Security Alert: High Severity...`,
     time: "9:15 AM",
     starred: false,
     unread: true,
     folder: "inbox",
   },
+  // Sent Emails
   {
     id: 3,
-    from: "Netflix",
-    subject: "New Shows Added to Your List",
-    preview: "Check out what's new on Netflix this week...",
-    body: `New on Netflix
-  
-  We've just added new shows and movies we think you'll love:
-  
-  1. The Latest Blockbuster
-  2. Award-winning Documentary
-  3. New Season of Your Favorite Show
-  4. Exclusive Netflix Original
-  
-  Start watching now!
-  
-  Netflix Team`,
-    time: "Yesterday",
+    from: "You",
+    to: "john.doe@example.com",
+    subject: "Meeting Follow-Up",
+    preview: "Thanks for the meeting earlier today...",
+    body: `Hi John,
+
+    I appreciate your time today. Here's a recap...`,
+    time: "11:45 AM",
     starred: false,
     unread: false,
-    folder: "inbox",
+    folder: "sent",
   },
   {
     id: 4,
+    from: "You",
+    to: "team@example.com",
+    subject: "Project Timeline Update",
+    preview: "I wanted to provide an update on the project...",
+    body: `Hi Team,
+
+    Based on recent developments, we need to adjust...`,
+    time: "Yesterday",
+    starred: true,
+    unread: false,
+    folder: "sent",
+  },
+  // Starred Emails
+  {
+    id: 5,
     from: "David Miller",
     subject: "Project Deadline Update",
     preview: "Regarding the upcoming deadline, I wanted to discuss...",
     body: `Hi,
-  
-  I wanted to touch base about the upcoming project deadline. After reviewing our progress and remaining tasks, I think we should consider adjusting our timeline.
-  
-  Here's why:
-  - Additional requirements from the client
-  - Need for more thorough testing
-  - Resource allocation challenges
-  
-  Can we schedule a meeting to discuss this?
-  
-  Best,
-  David`,
+
+    I wanted to touch base about the upcoming project deadline...`,
     time: "Yesterday",
     starred: true,
     unread: false,
-    folder: "inbox",
+    folder: "starred",
+  },
+  {
+    id: 6,
+    from: "HR Department",
+    subject: "Annual Performance Review",
+    preview: "Your annual review is scheduled for next week...",
+    body: `Dear Employee,
+
+    Your performance review is scheduled for next Monday...`,
+    time: "Monday",
+    starred: true,
+    unread: false,
+    folder: "starred",
+  },
+  // Archived Emails
+  {
+    id: 7,
+    from: "LinkedIn",
+    subject: "Job Matches for You",
+    preview: "Here are some job recommendations based on your profile...",
+    body: `Hi,
+
+    We found some exciting job opportunities that match your skills...`,
+    time: "Last Week",
+    starred: false,
+    unread: false,
+    folder: "archive",
+  },
+  {
+    id: 8,
+    from: "Amazon",
+    subject: "Order Shipped!",
+    preview: "Your order #123456 has been shipped...",
+    body: `Hi,
+
+    Your order has been shipped and is expected to arrive...`,
+    time: "Last Week",
+    starred: false,
+    unread: false,
+    folder: "archive",
+  },
+  // Trash Emails
+  {
+    id: 9,
+    from: "Spam Alert",
+    subject: "You've won a prize!",
+    preview: "Congratulations! You've won a brand new car...",
+    body: `Dear User,
+
+    You have won a free vacation. Click here to claim...`,
+    time: "Last Month",
+    starred: false,
+    unread: true,
+    folder: "trash",
+  },
+  {
+    id: 10,
+    from: "Promotions",
+    subject: "Limited-Time Offer!",
+    preview: "Exclusive deals just for you...",
+    body: `Hi,
+
+    Get 50% off on your next purchase with this exclusive...`,
+    time: "Last Month",
+    starred: false,
+    unread: false,
+    folder: "trash",
   },
 ];

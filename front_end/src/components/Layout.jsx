@@ -63,9 +63,9 @@ const Layout = ({component}) => {
 
         <nav className="space-y-2">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/inbox")}
             className={`flex items-center space-x-3 px-3 py-2 rounded-lg w-full ${
-              isActivePath("/")
+              isActivePath("/inbox")
                 ? "bg-gray-700"
                 : "text-gray-400 hover:bg-gray-700"
             }`}
