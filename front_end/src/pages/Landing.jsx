@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   Mail,
   Lock,
@@ -10,8 +10,31 @@ import {
 } from "lucide-react";
 
 const Landing = () => {
-  const navigate = useNavigate();
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [error, setError] = useState("");
 
+  const login = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = provider.getSigner();
+
+        if (accounts.length === 0) {
+          throw new Error("No accounts found in MetaMask");
+        }
+
+        setWalletAddress(accounts[0]);
+      } catch (err) {
+        console.error(err);
+        setError("Error in connecting to MetaMask");
+      }
+    } else {
+      setError("MetaMask is not installed");
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Hero Section */}
@@ -37,12 +60,19 @@ const Landing = () => {
                     <span>Get Started</span>
                     <ArrowRight size={20} />
                   </Link>
-                  <Link
-                    to="/login"
+                  <button
+                    onClick={login}
                     className="flex items-center justify-center space-x-2 px-8 py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors"
                   >
                     <span>Sign In</span>
-                  </Link>
+                  </button>
+                  {error && (
+                    <div className="w-full sm:w-auto px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                      <p className="text-red-500 text-sm font-medium flex items-center justify-center">
+                        {error}
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="mt-8 flex items-center gap-4 justify-center lg:justify-start text-gray-400">
                   <a href="#" className="hover:text-white transition-colors">
