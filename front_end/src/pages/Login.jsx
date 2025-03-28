@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Lock, Mail as MailIcon } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Mail as MailIcon } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', { email, password });
+    if (email === "" || password === "") {
+      setError("Please fill the fields");
+      return;
+    }
+    setError("");
+    console.log("Login attempt:", { email, password });
+    navigate("/inbox");
   };
 
   return (
@@ -23,6 +30,7 @@ const Login = () => {
           <p className="mt-2 text-sm text-gray-400">
             Sign in to your account to continue
           </p>
+          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -80,13 +88,19 @@ const Login = () => {
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-700 bg-gray-700 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-gray-800"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-400"
+              >
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">
+              <a
+                href="#"
+                className="font-medium text-indigo-400 hover:text-indigo-300"
+              >
                 Forgot your password?
               </a>
             </div>
@@ -102,8 +116,11 @@ const Login = () => {
           </div>
 
           <p className="text-center text-sm text-gray-400">
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-400 hover:text-indigo-300"
+            >
               Sign up
             </Link>
           </p>
@@ -111,6 +128,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
