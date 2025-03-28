@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Inbox,
   Send,
@@ -9,8 +10,10 @@ import {
   Menu,
   Plus,
   ChevronDown,
-  Star as StarFilled
-} from 'lucide-react';
+  Star as StarFilled,
+  X,
+} from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 const emails = [
   {
@@ -20,16 +23,17 @@ const emails = [
     preview: "Here's a summary of what we accomplished this week...",
     time: "10:30 AM",
     starred: true,
-    unread: true
+    unread: true,
   },
   {
     id: 2,
     from: "GitHub",
     subject: "Security Alert: Dependencies",
-    preview: "We found a potential security vulnerability in one of your dependencies...",
+    preview:
+      "We found a potential security vulnerability in one of your dependencies...",
     time: "9:15 AM",
     starred: false,
-    unread: true
+    unread: true,
   },
   {
     id: 3,
@@ -38,7 +42,7 @@ const emails = [
     preview: "Check out what's new on Netflix this week...",
     time: "Yesterday",
     starred: false,
-    unread: false
+    unread: false,
   },
   {
     id: 4,
@@ -47,48 +51,109 @@ const emails = [
     preview: "Regarding the upcoming deadline, I wanted to discuss...",
     time: "Yesterday",
     starred: true,
-    unread: false
-  }
+    unread: false,
+  },
 ];
 
 const MailInbox = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const showToast = () => {
+    toast("Feature under development", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      className: "custom-toast",
+    });
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex">
+      <ToastContainer />
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 p-4 flex flex-col">
-        <button className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg mb-6 hover:bg-indigo-700 transition-colors">
+      <div
+        className={`fixed lg:static w-64 bg-gray-800 p-4 flex flex-col h-screen z-30 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
+      >
+        <div className="flex justify-between items-center lg:hidden mb-4">
+          <h2 className="text-xl font-bold">Mail</h2>
+          <button
+            onClick={toggleSidebar}
+            className="text-gray-400 hover:text-white"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <button
+          onClick={showToast}
+          className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg mb-6 hover:bg-indigo-700 transition-colors"
+        >
           <Plus size={20} />
           <span>Compose</span>
         </button>
 
         <nav className="space-y-2">
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 bg-gray-700 rounded-lg">
+          <button className="flex items-center space-x-3 px-3 py-2 bg-gray-700 rounded-lg w-full">
             <Inbox size={20} />
             <span>Inbox</span>
-          </a>
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg">
+          </button>
+          <button
+            onClick={showToast}
+            className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg w-full"
+          >
             <Star size={20} />
             <span>Starred</span>
-          </a>
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg">
+          </button>
+          <button
+            onClick={showToast}
+            className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg w-full"
+          >
             <Send size={20} />
             <span>Sent</span>
-          </a>
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg">
+          </button>
+          <button
+            onClick={showToast}
+            className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg w-full"
+          >
             <Archive size={20} />
             <span>Archive</span>
-          </a>
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg">
+          </button>
+          <button
+            onClick={showToast}
+            className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg w-full"
+          >
             <Trash2 size={20} />
             <span>Trash</span>
-          </a>
+          </button>
         </nav>
 
         <div className="mt-auto">
-          <a href="#" className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg">
+          <button
+            onClick={showToast}
+            className="flex items-center space-x-3 px-3 py-2 text-gray-400 hover:bg-gray-700 rounded-lg w-full"
+          >
             <Settings size={20} />
             <span>Settings</span>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -97,16 +162,22 @@ const MailInbox = () => {
         {/* Header */}
         <header className="bg-gray-800 p-4 flex items-center justify-between border-b border-gray-700">
           <div className="flex items-center space-x-4">
-            <button className="text-gray-400 hover:text-white">
+            <button
+              className="text-gray-400 hover:text-white lg:hidden"
+              onClick={toggleSidebar}
+            >
               <Menu size={24} />
             </button>
-            <div className="relative">
+            <div className="relative flex-1">
               <input
                 type="text"
                 placeholder="Search mail..."
-                className="bg-gray-700 text-gray-100 px-4 py-2 pl-10 rounded-lg w-96 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="bg-gray-700 text-gray-100 px-4 py-2 pl-10 rounded-lg w-full max-w-[24rem] focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+              <Search
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={20}
+              />
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -124,37 +195,52 @@ const MailInbox = () => {
           {emails.map((email) => (
             <div
               key={email.id}
-              className={`flex items-center px-6 py-4 border-b border-gray-700 hover:bg-gray-800 cursor-pointer ${
-                email.unread ? 'bg-gray-800/50' : ''
+              className={`flex items-center px-4 sm:px-6 py-4 border-b border-gray-700 hover:bg-gray-800 cursor-pointer ${
+                email.unread ? "bg-gray-800/50" : ""
               }`}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2">
                   <button className="text-gray-400 hover:text-yellow-500">
                     {email.starred ? (
-                      <StarFilled size={20} className="fill-yellow-500 text-yellow-500" />
+                      <StarFilled
+                        size={20}
+                        className="fill-yellow-500 text-yellow-500"
+                      />
                     ) : (
                       <Star size={20} />
                     )}
                   </button>
-                  <span className={`font-medium ${email.unread ? 'text-white' : 'text-gray-400'}`}>
+                  <span
+                    className={`font-medium truncate ${
+                      email.unread ? "text-white" : "text-gray-400"
+                    }`}
+                  >
                     {email.from}
                   </span>
                 </div>
                 <div className="mt-1">
-                  <span className={`${email.unread ? 'text-white font-medium' : 'text-gray-400'}`}>
+                  <span
+                    className={`${
+                      email.unread ? "text-white font-medium" : "text-gray-400"
+                    } block sm:inline`}
+                  >
                     {email.subject}
                   </span>
-                  <span className="text-gray-500 ml-2">- {email.preview}</span>
+                  <span className="hidden sm:inline text-gray-500 ml-2">
+                    - {email.preview}
+                  </span>
                 </div>
               </div>
-              <div className="ml-6 text-sm text-gray-400">{email.time}</div>
+              <div className="ml-4 sm:ml-6 text-sm text-gray-400 whitespace-nowrap">
+                {email.time}
+              </div>
             </div>
           ))}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default MailInbox;
