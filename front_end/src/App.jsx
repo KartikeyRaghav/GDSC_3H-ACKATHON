@@ -1,16 +1,16 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MailInbox from "./pages/Inbox";
+import Landing from "./pages/Landing";
 
-function App() {
-  // In a real app, you'd check for authentication here
-
+const App = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/" element={<MailInbox />} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/inbox" element={<MailInbox />} />
     </Routes>
   );
 }
