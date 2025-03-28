@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.28;
 
-contract MailSystem {
-
+/// @title User Contract
+/// @notice A minimal contract deployed for each registered user. Can be extended for user-specific logic.
+contract UserContract {
+    uint256 private constant MAX_MAIL_SUBJECT_LENGTH = 200;
+    address public owner;
+    
+    constructor(address _owner) {
+        owner = _owner;
+    }
+    
     struct Mail {
         // address[] cc;
         uint256 timestamp;
@@ -28,6 +36,9 @@ contract MailSystem {
         string memory _body,
         string memory _subject
     ) public {
+        require(msg.sender==owner,"You are not owner of the mail account");
+        require(_receiver != address(0), "Invalid receiver address");
+        require(bytes(_subject).length <= MAX_MAIL_SUBJECT_LENGTH, "Subject too long");
         Mail memory newMail = Mail({
             // cc: _cc,
             timestamp: block.timestamp,
