@@ -11,47 +11,134 @@ import {
   ChevronDown,
   Star as StarFilled
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {ethers} from "ethers"
 
-const emails = [
-  {
-    id: 1,
-    from: "Alice Johnson",
-    subject: "Weekly Team Update",
-    preview: "Here's a summary of what we accomplished this week...",
-    time: "10:30 AM",
-    starred: true,
-    unread: true
-  },
-  {
-    id: 2,
-    from: "GitHub",
-    subject: "Security Alert: Dependencies",
-    preview: "We found a potential security vulnerability in one of your dependencies...",
-    time: "9:15 AM",
-    starred: false,
-    unread: true
-  },
-  {
-    id: 3,
-    from: "Netflix",
-    subject: "New Shows Added to Your List",
-    preview: "Check out what's new on Netflix this week...",
-    time: "Yesterday",
-    starred: false,
-    unread: false
-  },
-  {
-    id: 4,
-    from: "David Miller",
-    subject: "Project Deadline Update",
-    preview: "Regarding the upcoming deadline, I wanted to discuss...",
-    time: "Yesterday",
-    starred: true,
-    unread: false
-  }
-];
+import { usercontractabi, mailcoreabi, mailcoreaddress } from '../constants.js';
 
 const MailInbox = () => {
+  const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [emails, setEmails] = useState([]);
+  const [userContract, setUserContract] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [connectedAddress, setWalletAddress] = useState(null)
+  useEffect(() => {
+    const connectBlockchain = async () => {
+      try {
+        // Check if Ethereum provider is available (MetaMask or similar)
+        if (window.ethereum) {
+          // Request account access
+          const accounts = await window.ethereum.request({
+                    method: "eth_requestAccounts",
+                  });
+                  const provider = new ethers.providers.JsonRpcProvider();
+                  const signer = provider.getSigner()
+                  setProvider(provider)
+                  setSigner(signer)
+                  
+          
+                  if (accounts.length === 0) {
+                    throw new Error("No accounts found in MetaMask");
+                  }
+          
+                  setWalletAddress(accounts[0]);
+                  console.log("Account : ",accounts[0])
+          // Create MailCore contract instance
+          const mailCoreContract = new ethers.Contract(
+            mailcoreaddress, 
+            mailcoreabi, 
+            signer
+          );
+
+          if(connectedAddress){
+            alert("!No connected wallet!!")
+          }
+
+          // Fetch user info to get user contract address
+          const userInfo = await mailCoreContract.users(connectedAddress);
+          
+          if (!userInfo.exists) {
+            throw new Error('User not registered');
+          }
+
+          // Create user contract instance
+          const userContractInstance = new ethers.Contract(
+            userInfo.userContract, 
+            usercontractabi, 
+            signer
+          );
+          setUserContract(userContractInstance);
+
+          // Fetch received emails
+          const receivedMailCount = await userContractInstance.getReceivedMailsCount();
+          const receivedEmails = [];
+
+          for (let i = 0; i < receivedMailCount; i++) {
+            const mail = await userContractInstance.getReceivedMail(i);
+            receivedEmails.push({
+              id: i,
+              from: mail.sender,
+              subject: mail.subject,
+              preview: mail.body.substring(0, 50) + '...',
+              time: new Date(mail.timestamp * 1000).toLocaleTimeString(),
+              starred: false,
+              unread: true
+            });
+          }
+
+          setEmails(receivedEmails);
+          setLoading(false);
+        } else {
+          throw new Error('Ethereum provider not found. Please install MetaMask.');
+        }
+      } catch (err) {
+        console.error('Blockchain connection error:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    connectBlockchain();
+  }, []);
+
+  const sendEmail = async (receiver, body, subject, attachment = '') => {
+    try {
+      if (!userContract) {
+        throw new Error('Contract not initialized');
+      }
+
+      // Send mail via user contract
+      const tx = await userContract.sendMail(
+        receiver, 
+        body, 
+        subject, 
+        attachment
+      );
+
+      // Wait for transaction to be mined
+      await tx.wait();
+
+      // Optionally refresh emails or show success message
+      console.log('Email sent successfully');
+    } catch (err) {
+      console.error('Error sending email:', err);
+      setError(err.message);
+    }
+  };
+
+  // Render loading state
+  if (loading) {
+    return <div>Loading emails...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex">
       {/* Sidebar */}

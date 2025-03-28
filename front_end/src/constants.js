@@ -1,4 +1,4 @@
-export const mailcoreaddress="0xa14a0c7c13BDeb44B2e9B1613bbCd45be53b87CA";
+export const mailcoreaddress="0xfa5F389bcEbbEBD364D1D24e402e62B895b3809c";
 export const usercontractaddress="0xc3CcAd7b0b92a004BA48b9a0930D45C706aB9CB2";
 export const mailcoreabi=[
 	{
@@ -13,6 +13,37 @@ export const mailcoreabi=[
 		],
 		"name": "Deleted",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "deleteUser",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_username",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_profile_image",
+				"type": "string"
+			}
+		],
+		"name": "register",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -78,13 +109,6 @@ export const mailcoreabi=[
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "deleteUser",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -134,30 +158,6 @@ export const mailcoreabi=[
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_username",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_profile_image",
-				"type": "string"
-			}
-		],
-		"name": "register",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
